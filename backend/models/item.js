@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    startingPrice: Number,
-    currentPrice: { type: Number, default: 0 },
-    auctionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Auction' },
+    name: { type: String, required: true },
+    currentPrice: { type: Number, required: true }, // Initially set to the starting price
+    auction: { type: mongoose.Schema.Types.ObjectId, ref: 'Auction' }, // Reference to auction
+    minimumBidIncrement : {type : Number, required : true},
     bids: [
         {
             userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-            amount: Number,
-            timestamp: { type: Date, default: Date.now },
+            amount: { type: Number, required: true },
+            timestamp: { type: Date, default: Date.now }, // Add timestamp for each bid
         },
     ],
 });
 
-module.exports = mongoose.model('Item', itemSchema);
+const Item = mongoose.model('Item', itemSchema);
+
+module.exports = Item;

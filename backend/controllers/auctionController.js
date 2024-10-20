@@ -25,11 +25,9 @@ const getTodaysAuctions = async (req, res) => {
 const getAuctionDetails = async (req, res) =>{
     try {
         const auctionId = req.params.id;
-        console.log("Auction Id", auctionId);
 
         const auction = await Auction.findById(auctionId).populate('items'); // Populate items if necessary
 
-        console.log("Auctions", auction);
         if (!auction) {
             return res.status(404).json({ error: 'Auction not found' });
         }
@@ -40,6 +38,34 @@ const getAuctionDetails = async (req, res) =>{
         res.status(500).json({ error: 'Server error' });
     }
 }
+
+
+
+// router.get('/auction/:id', async (req, res) => {
+//     const itemId = req.params.id;
+
+//     try {
+//         // Read current price and bid history from Redis
+//         const currentPrice = await readCurrentPriceFromRedis(itemId);
+//         const bidHistory = await readBidHistoryFromRedis(itemId);
+
+//         // If Redis cache is empty, fallback to MongoDB
+//         if (!currentPrice || bidHistory.length === 0) {
+//             const item = await Item.findById(itemId).populate('auction');
+//             if (!item) return res.status(404).json({ error: 'Item not found' });
+
+//             return res.json({ currentPrice: item.currentPrice, bids: item.bids });
+//         }
+
+//         res.json({ currentPrice, bids: bidHistory });
+//     } catch (error) {
+//         console.error('Error fetching auction data:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// });
+
+
+
 
 // Create a new auction
 const createAuction = async (req, res) => {
@@ -52,6 +78,7 @@ const createAuction = async (req, res) => {
                 const newItem = new Item({ 
                     name: itemData.name, 
                     currentPrice: itemData.startingPrice,
+                    minimumBidIncrement : itemData.minimumBidIncrement,
                 });
                 await newItem.save();
                 return newItem._id; // Return the item's ID

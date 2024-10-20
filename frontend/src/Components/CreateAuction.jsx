@@ -102,6 +102,13 @@ const CreateAuction = () => {
                             onChange={(e) => handleItemChange(index, 'startingPrice', e.target.value)}
                             required
                         />
+                         <label>Min bid Increment</label>
+                        <input
+                            type="number"
+                            value={item.minimumBidIncrement}
+                            onChange={(e) => handleItemChange(index, 'minimumBidIncrement', e.target.value)}
+                            required
+                        />
                         {items.length > 1 && (
                             <button type="button" onClick={() => handleRemoveItem(index)}>
                                 Remove Item
